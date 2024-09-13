@@ -1,31 +1,34 @@
 import { useTodo } from "../context/TodoContext";
 import { useState } from "react";
-function TodoItem({todo}) {
-    const [isTodoEditable, setIsTodoEditable] = useState(false)
-    const [todoMsg, setTodoMsg] = useState(todo.todo)
-    const {updateTodo, deleteTodo, toggleComplete} = useTodo()
 
-    const editTodo = ()=>{
-        updateTodo(todo.id, {...todo, todo: todoMsg });
+function TodoItem({ todo }) {
+    const [isTodoEditable, setIsTodoEditable] = useState(false);
+    const [todoMsg, setTodoMsg] = useState(todo.todo);
+    const { updateTodo, deleteTodo, toggleComplete } = useTodo();
+
+    const editTodo = () => {
+        updateTodo(todo.id, { ...todo, todo: todoMsg });
         setIsTodoEditable(false);
-    }
+    };
 
-    const toggleCompleted = ()=>{
-        toggleComplete(todo.id)
-    }
+    const toggleCompleted = () => {
+        toggleComplete(todo.id);
+    };
 
     return (
         <div
-            className={`flex border border-black/10 rounded-lg px-3 py-1.5 gap-x-3 shadow-sm shadow-white/50 duration-300  text-black ${
+            className={`flex border border-black/10 rounded-lg px-3 py-1.5 gap-x-3 shadow-sm shadow-white/50 duration-300 text-black ${
                 todo.completed ? "bg-[#c6e9a7]" : "bg-[#ccbed7]"
             }`}
         >
+            {/* Checkbox to toggle completion */}
             <input
                 type="checkbox"
                 className="cursor-pointer"
                 checked={todo.completed}
                 onChange={toggleCompleted}
             />
+            {/* Todo text input, editable if in edit mode */}
             <input
                 type="text"
                 className={`border outline-none w-full bg-transparent rounded-lg ${
@@ -35,15 +38,17 @@ function TodoItem({todo}) {
                 onChange={(e) => setTodoMsg(e.target.value)}
                 readOnly={!isTodoEditable}
             />
-            {/* Edit, Save Button */}
+            {/* Edit or Save button */}
             <button
                 className="inline-flex w-8 h-8 rounded-lg text-sm border border-black/10 justify-center items-center bg-gray-50 hover:bg-gray-100 shrink-0 disabled:opacity-50"
                 onClick={() => {
-                    if (todo.completed) return;
+                    if (todo.completed) return; // Disable edit if todo is completed
 
                     if (isTodoEditable) {
-                        editTodo();
-                    } else setIsTodoEditable((prev) => !prev);
+                        editTodo(); // Save the edited todo
+                    } else {
+                        setIsTodoEditable(true); // Switch to edit mode
+                    }
                 }}
                 disabled={todo.completed}
             >
